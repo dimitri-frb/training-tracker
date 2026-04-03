@@ -32,7 +32,7 @@ const STATUS_COLORS = {
 
 function SessionRow({ session, onEdit }) {
   const { type, label, planned, logged, status, isKey } = session;
-  const isLoggable = type === 'run' || type === 'longrun';
+  const isLoggable = type !== 'rest';
 
   return (
     <div
