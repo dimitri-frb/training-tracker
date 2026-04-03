@@ -3,7 +3,7 @@ import { INITIAL_SESSIONS } from '../data/trainingPlan';
 
 const STORAGE_KEY = 'training-tracker-sessions';
 const VERSION_KEY = 'training-tracker-version';
-const CURRENT_VERSION = 8; // bump when INITIAL_SESSIONS changes
+const CURRENT_VERSION = 9; // bump when INITIAL_SESSIONS changes
 
 function mergeSessions(stored, initial) {
   // Respect user deletions
