@@ -39,6 +39,15 @@ export const FIXED_STRUCTURE = {
   sunday: { label: 'Recovery run (optional)' },
 };
 
+// Classify an avgHR into a zone key (z1, z2, etc.)
+export function getZone(avgHR) {
+  if (!avgHR) return null;
+  for (const [key, z] of Object.entries(ATHLETE.hrZones)) {
+    if (avgHR >= z.min && avgHR <= z.max) return key;
+  }
+  return null;
+}
+
 // Helper to parse pace string "M:SS" to seconds per km
 export function paceToSeconds(pace) {
   if (!pace) return null;
@@ -56,14 +65,14 @@ export function secondsToPace(secs) {
 
 // Week objectives — keyed by Monday date of each week
 export const WEEK_OBJECTIVES = {
-  '2026-03-30': { week: 1, title: 'Return to Running', desc: 'First steps back from injury. Z1 only, strict HR caps. Build confidence.' },
-  '2026-04-06': { week: 2, title: 'Aerobic Foundation', desc: 'Introduce Z2 runs. Keep long run strictly aerobic. Listen to the hip.' },
-  '2026-04-13': { week: 3, title: 'Volume +10%', desc: 'Bump long run to 80 min. Add Thursday easy run. Stay in Z2.' },
-  '2026-04-20': { week: 4, title: 'Consistency', desc: 'Hold volume. First Z3 intervals on Tuesday. Long run push to 85 min.' },
-  '2026-04-27': { week: 5, title: 'Hyrox Specificity', desc: 'Add race-pace efforts on Tuesday. Long run 90 min with Z2 push finish.' },
-  '2026-05-04': { week: 6, title: 'Peak Week', desc: 'Highest volume week. Long run 90 min. Tuesday tempo at Hyrox pace (4:45-4:50/km).' },
-  '2026-05-11': { week: 7, title: 'Taper', desc: 'Reduce volume 30%. Keep intensity. Sharpen for race day.' },
-  '2026-05-18': { week: 8, title: 'Race Week — Hyrox Duo', desc: 'Light openers only. Race day Friday May 22. Trust the work.' },
+  '2026-03-30': { week: 1, title: 'Return to Running', desc: 'First steps back from injury. Z1 only, strict HR caps. Build confidence.', targetKm: 20 },
+  '2026-04-06': { week: 2, title: 'Aerobic Foundation', desc: 'Introduce Z2 runs. Keep long run strictly aerobic. Listen to the hip.', targetKm: 25 },
+  '2026-04-13': { week: 3, title: 'Volume +10%', desc: 'Bump long run to 80 min. Add Thursday easy run. Stay in Z2.', targetKm: 28 },
+  '2026-04-20': { week: 4, title: 'Consistency', desc: 'Hold volume. First Z3 intervals on Tuesday. Long run push to 85 min.', targetKm: 32 },
+  '2026-04-27': { week: 5, title: 'Hyrox Specificity', desc: 'Add race-pace efforts on Tuesday. Long run 90 min with Z2 push finish.', targetKm: 35 },
+  '2026-05-04': { week: 6, title: 'Peak Week', desc: 'Highest volume week. Long run 90 min. Tuesday tempo at Hyrox pace (4:45-4:50/km).', targetKm: 38 },
+  '2026-05-11': { week: 7, title: 'Taper', desc: 'Reduce volume 30%. Keep intensity. Sharpen for race day.', targetKm: 25 },
+  '2026-05-18': { week: 8, title: 'Race Week — Hyrox Duo', desc: 'Light openers only. Race day Friday May 22. Trust the work.', targetKm: 15 },
 };
 
 // Helper to generate a standard week of sessions

@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { format, parseISO } from 'date-fns';
 import { extractStravaData } from '../utils/extractStrava';
 
-export default function SessionLogger({ session, onSave, onClose }) {
+export default function SessionLogger({ session, onSave, onDelete, onClose }) {
   const isRun = session.type === 'run' || session.type === 'longrun';
   const [distance, setDistance] = useState(session.logged?.distance || '');
   const [pace, setPace] = useState(session.logged?.pace || '');
@@ -175,6 +175,12 @@ export default function SessionLogger({ session, onSave, onClose }) {
             />
           </label>
           <div className="form-actions">
+            {onDelete && (
+              <button type="button" className="btn-delete" onClick={onDelete}>
+                Delete
+              </button>
+            )}
+            <span style={{ flex: 1 }} />
             <button type="button" className="btn-secondary" onClick={onClose}>
               Cancel
             </button>

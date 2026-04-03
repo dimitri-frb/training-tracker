@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, parseISO, startOfWeek, addWeeks, subWeeks, isSameWeek } from 'date-fns';
-import { paceToSeconds, secondsToPace, WEEK_OBJECTIVES } from '../data/trainingPlan';
+import { paceToSeconds, secondsToPace, WEEK_OBJECTIVES, getZone, ATHLETE } from '../data/trainingPlan';
 import DayCard from './SessionCard';
 import SessionLogger from './SessionLogger';
 
@@ -25,10 +25,23 @@ function computeKPIs(weekSessions) {
   const totalSessions = activeSessions.length;
   const doneSessions = activeSessions.filter(s => s.status === 'done').length;
 
-  return { totalKm, avgPaceSecs, avgHR, totalSessions, doneSessions, runsLogged: loggedRuns.length };
+  // Pace per zone
+  const zonePaces = {};
+  loggedRuns.filter(s => s.logged.pace && s.logged.avgHR).forEach(s => {
+    const zone = getZone(s.logged.avgHR);
+    if (!zone) return;
+    if (!zonePaces[zone]) zonePaces[zone] = [];
+    zonePaces[zone].push(paceToSeconds(s.logged.pace));
+  });
+  const avgZonePaces = {};
+  for (const [zone, paces] of Object.entries(zonePaces)) {
+    avgZonePaces[zone] = paces.reduce((a, b) => a + b, 0) / paces.length;
+  }
+
+  return { totalKm, avgPaceSecs, avgHR, totalSessions, doneSessions, runsLogged: loggedRuns.length, avgZonePaces };
 }
 
-export default function WeeklyView({ sessions, onLog, onUpdate }) {
+export default function WeeklyView({ sessions, onLog, onUpdate, onDelete }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(() =>
     startOfWeek(new Date(), { weekStartsOn: 1 })
   );
@@ -70,7 +83,10 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
 
       <div className="kpi-row">
         <div className="kpi-card">
-          <span className="kpi-value">{kpis.totalKm > 0 ? kpis.totalKm.toFixed(1) : '—'}</span>
+          <span className="kpi-value">
+            {kpis.totalKm > 0 ? kpis.totalKm.toFixed(1) : '—'}
+            {objective?.targetKm && <span className="kpi-target">/{objective.targetKm}</span>}
+          </span>
           <span className="kpi-label">km</span>
         </div>
         <div className="kpi-card">
@@ -86,6 +102,17 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
           <span className="kpi-label">done</span>
         </div>
       </div>
+
+      {Object.keys(kpis.avgZonePaces).length > 0 && (
+        <div className="zone-pace-row">
+          {Object.entries(kpis.avgZonePaces).map(([zone, secs]) => (
+            <div key={zone} className="zone-pace-card" style={{ borderColor: ATHLETE.hrZones[zone]?.color }}>
+              <span className="zone-pace-value">{secondsToPace(secs)}</span>
+              <span className="zone-pace-label">{zone.toUpperCase()}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {weekSessions.length === 0 ? (
         <p className="empty-week">No sessions planned for this week.</p>
@@ -120,6 +147,10 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
           session={editingSession}
           onSave={(data) => {
             onLog(editingSession.id, data);
+            setEditingSession(null);
+          }}
+          onDelete={() => {
+            onDelete(editingSession.id);
             setEditingSession(null);
           }}
           onClose={() => setEditingSession(null)}
