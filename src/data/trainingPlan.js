@@ -82,6 +82,13 @@ export const INITIAL_SESSIONS = [
     status: 'upcoming',
   },
   {
+    id: 'w1-tue-pm',
+    date: '2026-03-31',
+    type: 'gym',
+    label: 'Hyrox Gym (PM)',
+    status: 'upcoming',
+  },
+  {
     id: 'w1-wed',
     date: '2026-04-01',
     type: 'padel',
@@ -93,6 +100,13 @@ export const INITIAL_SESSIONS = [
     date: '2026-04-02',
     type: 'rest',
     label: 'Rest',
+    status: 'done',
+  },
+  {
+    id: 'w1-thu-pm',
+    date: '2026-04-02',
+    type: 'gym',
+    label: 'Hyrox Gym (PM)',
     status: 'done',
   },
   {
@@ -136,6 +150,13 @@ export const INITIAL_SESSIONS = [
     status: 'upcoming',
   },
   {
+    id: 'w2-tue-pm',
+    date: '2026-04-07',
+    type: 'gym',
+    label: 'Hyrox Gym (PM)',
+    status: 'upcoming',
+  },
+  {
     id: 'w2-wed',
     date: '2026-04-08',
     type: 'padel',
@@ -148,6 +169,13 @@ export const INITIAL_SESSIONS = [
     type: 'run',
     label: 'Z2 Push Run',
     planned: { duration: 50, hrTarget: 'Z2' },
+    status: 'upcoming',
+  },
+  {
+    id: 'w2-thu-pm',
+    date: '2026-04-09',
+    type: 'gym',
+    label: 'Hyrox Gym (PM)',
     status: 'upcoming',
   },
   {
