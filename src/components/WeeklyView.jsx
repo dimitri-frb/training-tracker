@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { format, parseISO, startOfWeek, addWeeks, subWeeks, isSameWeek } from 'date-fns';
 import { paceToSeconds, secondsToPace, WEEK_OBJECTIVES } from '../data/trainingPlan';
-import SessionCard from './SessionCard';
+import DayCard from './SessionCard';
 import SessionLogger from './SessionLogger';
 
 function computeKPIs(weekSessions) {
@@ -91,13 +91,27 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
         <p className="empty-week">No sessions planned for this week.</p>
       ) : (
         <div className="session-list">
-          {weekSessions.map(session => (
-            <SessionCard
-              key={session.id}
-              session={session}
-              onEdit={() => setEditingSession(session)}
-            />
-          ))}
+          {(() => {
+            const grouped = [];
+            const seen = new Set();
+            weekSessions.forEach(s => {
+              if (!seen.has(s.date)) {
+                seen.add(s.date);
+                grouped.push({
+                  date: s.date,
+                  sessions: weekSessions.filter(x => x.date === s.date),
+                });
+              }
+            });
+            return grouped.map(g => (
+              <DayCard
+                key={g.date}
+                date={g.date}
+                sessions={g.sessions}
+                onEdit={(session) => setEditingSession(session)}
+              />
+            ));
+          })()}
         </div>
       )}
 

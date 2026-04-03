@@ -181,14 +181,14 @@ body {
   padding: 40px 0;
 }
 
-/* ========== SESSION CARD ========== */
+/* ========== DAY CARD ========== */
 .session-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.session-card {
+.day-card {
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -198,20 +198,11 @@ body {
   border-left: 3px solid var(--border);
 }
 
-.session-card.clickable {
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.session-card.clickable:hover {
-  background: var(--surface2);
-}
-
-.session-card.done {
+.day-card.done {
   border-left-color: var(--green);
 }
 
-.session-card.key-session {
+.day-card.key-session {
   border-left-color: var(--orange);
   background: linear-gradient(135deg, var(--surface) 0%, rgba(249, 115, 22, 0.06) 100%);
 }
@@ -221,6 +212,37 @@ body {
   flex-direction: column;
   align-items: center;
   min-width: 48px;
+  padding-top: 2px;
+}
+
+.day-sessions {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.session-row {
+  padding: 4px 0;
+}
+
+.day-sessions .session-row + .session-row {
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.session-row.clickable {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  transition: background 0.15s;
+}
+
+.session-row.clickable:hover {
+  background: var(--surface2);
 }
 
 .day-name {
@@ -233,11 +255,6 @@ body {
 .day-num {
   font-size: 0.7rem;
   color: var(--text-muted);
-}
-
-.session-body {
-  flex: 1;
-  min-width: 0;
 }
 
 .session-header {
