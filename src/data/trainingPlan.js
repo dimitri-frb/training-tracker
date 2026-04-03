@@ -23,10 +23,7 @@ export const RACES = [
 ];
 
 export const PHASES = [
-  { id: 1, name: 'Hyrox Base', start: '2026-03-29', end: '2026-05-17', weeks: 7, color: '#f97316' },
-  { id: 2, name: 'Trail Block', start: '2026-05-23', end: '2026-06-22', weeks: 4, color: '#22c55e' },
-  { id: 3, name: 'Marathon Build', start: '2026-07-05', end: '2026-10-12', weeks: 14, color: '#3b82f6' },
-  { id: 4, name: 'Marathon Taper', start: '2026-10-13', end: '2026-12-06', weeks: 8, color: '#a855f7' },
+  { id: 1, name: 'Hyrox Base', start: '2026-03-29', end: '2026-05-22', weeks: 8, color: '#f97316' },
 ];
 
 export const FIXED_STRUCTURE = {
