@@ -74,14 +74,6 @@ export const INITIAL_SESSIONS = [
     status: 'done',
   },
   {
-    id: 'w1-tue',
-    date: '2026-03-31',
-    type: 'run',
-    label: 'Z2 Run',
-    planned: { duration: 50, hrTarget: '131-142 bpm' },
-    status: 'upcoming',
-  },
-  {
     id: 'w1-tue-pm',
     date: '2026-03-31',
     type: 'gym',

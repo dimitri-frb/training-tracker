@@ -21,8 +21,9 @@ function computeKPIs(weekSessions) {
     ? Math.round(withHR.reduce((sum, s) => sum + s.logged.avgHR, 0) / withHR.length)
     : null;
 
-  const totalSessions = weekSessions.length;
-  const doneSessions = weekSessions.filter(s => s.status === 'done').length;
+  const activeSessions = weekSessions.filter(s => s.type !== 'rest');
+  const totalSessions = activeSessions.length;
+  const doneSessions = activeSessions.filter(s => s.status === 'done').length;
 
   return { totalKm, avgPaceSecs, avgHR, totalSessions, doneSessions, runsLogged: loggedRuns.length };
 }
