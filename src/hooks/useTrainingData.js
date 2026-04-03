@@ -3,7 +3,7 @@ import { INITIAL_SESSIONS } from '../data/trainingPlan';
 
 const STORAGE_KEY = 'training-tracker-sessions';
 const VERSION_KEY = 'training-tracker-version';
-const CURRENT_VERSION = 10; // bump when INITIAL_SESSIONS changes
+const CURRENT_VERSION = 11; // bump when INITIAL_SESSIONS changes
 
 function mergeSessions(stored, initial) {
   // Respect user deletions
@@ -16,7 +16,7 @@ function mergeSessions(stored, initial) {
     if (existing?.logged) {
       return { ...s, logged: existing.logged, status: existing.status };
     }
-    return existing || s;
+    return s;
   });
   // Keep user-added sessions (ids starting with "custom-") but drop old removed ones
   stored.forEach(s => {
