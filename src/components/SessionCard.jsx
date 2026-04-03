@@ -70,7 +70,9 @@ function SessionRow({ session, onEdit }) {
           })()}
           {logged.notes && <p className="log-notes">{logged.notes}</p>}
           {logged.image && (
-            <img src={logged.image} alt="Strava screenshot" className="session-screenshot" />
+            <span className="session-has-image" onClick={e => { e.stopPropagation(); window.open(logged.image, '_blank'); }}>
+              📷
+            </span>
           )}
         </div>
       )}
