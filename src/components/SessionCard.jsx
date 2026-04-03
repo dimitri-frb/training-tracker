@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns';
-import { ATHLETE } from '../data/trainingPlan';
+import { ATHLETE, getZone } from '../data/trainingPlan';
 
 const ZONE_RANGES = Object.fromEntries(
   Object.entries(ATHLETE.hrZones).map(([key, z]) => [
@@ -58,7 +58,16 @@ function SessionRow({ session, onEdit }) {
         <div className="session-logged">
           {logged.distance && <span>{logged.distance} km</span>}
           {logged.pace && <span>{logged.pace}/km</span>}
-          {logged.avgHR && <span>{logged.avgHR} bpm</span>}
+          {logged.avgHR && (() => {
+            const zone = getZone(logged.avgHR);
+            const z = zone ? ATHLETE.hrZones[zone] : null;
+            return (
+              <span className="logged-zone" style={z ? { color: z.color } : undefined}>
+                {logged.avgHR} bpm
+                {z && ` · ${zone.toUpperCase()} (${z.min === 0 ? '<' + z.max : z.min + '–' + z.max})`}
+              </span>
+            );
+          })()}
           {logged.notes && <p className="log-notes">{logged.notes}</p>}
           {logged.image && (
             <img src={logged.image} alt="Strava screenshot" className="session-screenshot" />
