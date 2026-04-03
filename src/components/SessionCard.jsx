@@ -19,8 +19,13 @@ export default function SessionCard({ session, onEdit }) {
   const dayName = format(parseISO(date), 'EEE');
   const dayNum = format(parseISO(date), 'MMM d');
 
+  const isLoggable = type === 'run' || type === 'longrun';
+
   return (
-    <div className={`session-card ${status} ${isKey ? 'key-session' : ''}`}>
+    <div
+      className={`session-card ${status} ${isKey ? 'key-session' : ''} ${isLoggable ? 'clickable' : ''}`}
+      onClick={isLoggable ? onEdit : undefined}
+    >
       <div className="session-day">
         <span className="day-name">{dayName}</span>
         <span className="day-num">{dayNum}</span>
@@ -48,15 +53,10 @@ export default function SessionCard({ session, onEdit }) {
             {logged.pace && <span>{logged.pace}/km</span>}
             {logged.avgHR && <span>{logged.avgHR} bpm</span>}
             {logged.notes && <p className="log-notes">{logged.notes}</p>}
+            {logged.image && (
+              <img src={logged.image} alt="Strava screenshot" className="session-screenshot" />
+            )}
           </div>
-        )}
-      </div>
-
-      <div className="session-actions">
-        {(type === 'run' || type === 'longrun') && (
-          <button className="btn-log" onClick={onEdit}>
-            {logged ? 'Edit' : 'Log'}
-          </button>
         )}
       </div>
     </div>

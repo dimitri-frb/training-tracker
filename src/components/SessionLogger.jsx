@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { format, parseISO } from 'date-fns';
 
 export default function SessionLogger({ session, onSave, onClose }) {
@@ -6,6 +6,21 @@ export default function SessionLogger({ session, onSave, onClose }) {
   const [pace, setPace] = useState(session.logged?.pace || '');
   const [avgHR, setAvgHR] = useState(session.logged?.avgHR || '');
   const [notes, setNotes] = useState(session.logged?.notes || '');
+  const [image, setImage] = useState(session.logged?.image || null);
+  const fileRef = useRef();
+
+  function handleImage(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setImage(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage() {
+    setImage(null);
+    if (fileRef.current) fileRef.current.value = '';
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -14,6 +29,7 @@ export default function SessionLogger({ session, onSave, onClose }) {
       pace: pace || null,
       avgHR: avgHR ? parseInt(avgHR) : null,
       notes: notes || null,
+      image: image || null,
     });
   }
 
@@ -64,6 +80,36 @@ export default function SessionLogger({ session, onSave, onClose }) {
               />
             </label>
           </div>
+
+          <label className="upload-label">
+            Strava Screenshot
+            <div
+              className={`upload-zone ${image ? 'has-image' : ''}`}
+              onClick={() => !image && fileRef.current?.click()}
+            >
+              {image ? (
+                <div className="upload-preview">
+                  <img src={image} alt="Strava screenshot" />
+                  <button type="button" className="upload-remove" onClick={removeImage}>
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="upload-placeholder">
+                  <span className="upload-icon">+</span>
+                  <span>Tap to upload screenshot</span>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImage}
+              style={{ display: 'none' }}
+            />
+          </label>
+
           <label>
             Notes
             <textarea
