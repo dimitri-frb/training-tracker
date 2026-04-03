@@ -1,4 +1,21 @@
 import { format, parseISO } from 'date-fns';
+import { ATHLETE } from '../data/trainingPlan';
+
+const ZONE_RANGES = Object.fromEntries(
+  Object.entries(ATHLETE.hrZones).map(([key, z]) => [
+    key.toUpperCase(),
+    `${z.min}–${z.max} bpm`,
+  ])
+);
+
+function expandHrTarget(target) {
+  if (!target) return null;
+  // Replace standalone zone references like "Z2" with "Z2 (131–145 bpm)"
+  return target.replace(/\b(Z[1-5])\b/g, (match) => {
+    const range = ZONE_RANGES[match];
+    return range ? `${match} (${range})` : match;
+  });
+}
 
 const TYPE_ICONS = {
   run: '\u{1F3C3}',
@@ -42,7 +59,7 @@ export default function SessionCard({ session, onEdit }) {
         {planned && (
           <div className="session-planned">
             {planned.duration && <span>{planned.duration} min</span>}
-            {planned.hrTarget && <span className="hr-target">HR: {planned.hrTarget}</span>}
+            {planned.hrTarget && <span className="hr-target">HR: {expandHrTarget(planned.hrTarget)}</span>}
             {planned.notes && <span className="plan-notes">{planned.notes}</span>}
           </div>
         )}

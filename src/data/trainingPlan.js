@@ -54,9 +54,66 @@ export function secondsToPace(secs) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-// Initial sessions data — weeks 1 & 2
+// Week objectives — keyed by Monday date of each week
+export const WEEK_OBJECTIVES = {
+  '2026-03-30': { week: 1, title: 'Return to Running', desc: 'First steps back from injury. Z1 only, strict HR caps. Build confidence.' },
+  '2026-04-06': { week: 2, title: 'Aerobic Foundation', desc: 'Introduce Z2 runs. Keep long run strictly aerobic. Listen to the hip.' },
+  '2026-04-13': { week: 3, title: 'Volume +10%', desc: 'Bump long run to 80 min. Add Thursday easy run. Stay in Z2.' },
+  '2026-04-20': { week: 4, title: 'Consistency', desc: 'Hold volume. First Z3 intervals on Tuesday. Long run push to 85 min.' },
+  '2026-04-27': { week: 5, title: 'Hyrox Specificity', desc: 'Add race-pace efforts on Tuesday. Long run 90 min with Z2 push finish.' },
+  '2026-05-04': { week: 6, title: 'Peak Week', desc: 'Highest volume week. Long run 90 min. Tuesday tempo at Hyrox pace (4:45-4:50/km).' },
+  '2026-05-11': { week: 7, title: 'Taper', desc: 'Reduce volume 30%. Keep intensity. Sharpen for race day.' },
+  '2026-05-18': { week: 8, title: 'Race Week — Hyrox Duo', desc: 'Light openers only. Race day Friday May 22. Trust the work.' },
+};
+
+// Helper to generate a standard week of sessions
+function makeWeek(w, monDate, opts = {}) {
+  const d = (offset) => {
+    const date = new Date(monDate);
+    date.setDate(date.getDate() + offset);
+    return date.toISOString().slice(0, 10);
+  };
+  const sessions = [];
+
+  // Monday — Rest
+  sessions.push({ id: `w${w}-mon`, date: d(0), type: 'rest', label: 'Rest', status: 'upcoming' });
+
+  // Tuesday AM — Run
+  if (opts.tuRun) {
+    sessions.push({ id: `w${w}-tue`, date: d(1), type: 'run', label: opts.tuRun.label, planned: opts.tuRun.planned, status: 'upcoming' });
+  }
+  // Tuesday PM — Hyrox Gym
+  sessions.push({ id: `w${w}-tue-pm`, date: d(1), type: 'gym', label: 'Hyrox Gym (PM)', status: 'upcoming' });
+
+  // Wednesday — Padel
+  sessions.push({ id: `w${w}-wed`, date: d(2), type: 'padel', label: 'Padel', status: 'upcoming' });
+
+  // Thursday AM — Easy Run
+  if (opts.thuRun) {
+    sessions.push({ id: `w${w}-thu`, date: d(3), type: 'run', label: opts.thuRun.label, planned: opts.thuRun.planned, status: 'upcoming' });
+  }
+  // Thursday PM — Hyrox Gym
+  sessions.push({ id: `w${w}-thu-pm`, date: d(3), type: 'gym', label: 'Hyrox Gym (PM)', status: 'upcoming' });
+
+  // Friday — Long Run (KEY)
+  if (opts.longRun) {
+    sessions.push({ id: `w${w}-fri`, date: d(4), type: 'longrun', label: 'Long Run', planned: opts.longRun.planned, isKey: true, status: 'upcoming' });
+  }
+
+  // Saturday — Rest
+  sessions.push({ id: `w${w}-sat`, date: d(5), type: 'rest', label: 'Rest', status: 'upcoming' });
+
+  // Sunday — Recovery (optional)
+  if (opts.sunRun) {
+    sessions.push({ id: `w${w}-sun`, date: d(6), type: 'run', label: opts.sunRun.label, planned: opts.sunRun.planned, status: 'upcoming' });
+  }
+
+  return sessions;
+}
+
+// Initial sessions data — Hyrox Base phase (Weeks 1–8)
 export const INITIAL_SESSIONS = [
-  // Week 1
+  // ===== WEEK 1 (Mar 29 – Apr 5) — Return to Running =====
   {
     id: 'w1-sun',
     date: '2026-03-29',
@@ -66,132 +123,70 @@ export const INITIAL_SESSIONS = [
     logged: { distance: 4.72, pace: '6:22', avgHR: 130, notes: 'First run back from injury. Felt good.' },
     status: 'done',
   },
-  {
-    id: 'w1-mon',
-    date: '2026-03-30',
-    type: 'rest',
-    label: 'Rest',
-    status: 'done',
-  },
-  {
-    id: 'w1-tue-pm',
-    date: '2026-03-31',
-    type: 'gym',
-    label: 'Hyrox Gym (PM)',
-    status: 'upcoming',
-  },
-  {
-    id: 'w1-wed',
-    date: '2026-04-01',
-    type: 'padel',
-    label: 'Padel',
-    status: 'upcoming',
-  },
-  {
-    id: 'w1-thu',
-    date: '2026-04-02',
-    type: 'rest',
-    label: 'Rest',
-    status: 'done',
-  },
-  {
-    id: 'w1-thu-pm',
-    date: '2026-04-02',
-    type: 'gym',
-    label: 'Hyrox Gym (PM)',
-    status: 'done',
-  },
-  {
-    id: 'w1-fri',
-    date: '2026-04-03',
-    type: 'longrun',
-    label: 'Long Run',
-    planned: { duration: 75, hrTarget: '130-140 bpm STRICT' },
-    isKey: true,
-    status: 'upcoming',
-  },
-  {
-    id: 'w1-sat',
-    date: '2026-04-04',
-    type: 'rest',
-    label: 'Rest',
-    status: 'upcoming',
-  },
-  {
-    id: 'w1-sun2',
-    date: '2026-04-05',
-    type: 'run',
-    label: 'Recovery',
-    planned: { duration: 35, hrTarget: '< 133 bpm', notes: 'Treadmill' },
-    status: 'upcoming',
-  },
-  // Week 2
-  {
-    id: 'w2-mon',
-    date: '2026-04-06',
-    type: 'rest',
-    label: 'Rest',
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-tue',
-    date: '2026-04-07',
-    type: 'run',
-    label: 'Z2 Run',
-    planned: { duration: 50, hrTarget: 'Z2' },
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-tue-pm',
-    date: '2026-04-07',
-    type: 'gym',
-    label: 'Hyrox Gym (PM)',
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-wed',
-    date: '2026-04-08',
-    type: 'padel',
-    label: 'Padel',
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-thu',
-    date: '2026-04-09',
-    type: 'run',
-    label: 'Z2 Push Run',
-    planned: { duration: 50, hrTarget: 'Z2' },
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-thu-pm',
-    date: '2026-04-09',
-    type: 'gym',
-    label: 'Hyrox Gym (PM)',
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-fri',
-    date: '2026-04-10',
-    type: 'longrun',
-    label: 'Long Run',
-    planned: { duration: 75, hrTarget: '130-140 bpm' },
-    isKey: true,
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-sat',
-    date: '2026-04-11',
-    type: 'rest',
-    label: 'Rest',
-    status: 'upcoming',
-  },
-  {
-    id: 'w2-sun',
-    date: '2026-04-12',
-    type: 'run',
-    label: 'Recovery',
-    planned: { duration: 35, hrTarget: '< 133 bpm' },
-    status: 'upcoming',
-  },
+  { id: 'w1-mon', date: '2026-03-30', type: 'rest', label: 'Rest', status: 'done' },
+  { id: 'w1-tue-pm', date: '2026-03-31', type: 'gym', label: 'Hyrox Gym (PM)', status: 'upcoming' },
+  { id: 'w1-wed', date: '2026-04-01', type: 'padel', label: 'Padel', status: 'upcoming' },
+  { id: 'w1-thu', date: '2026-04-02', type: 'rest', label: 'Rest', status: 'done' },
+  { id: 'w1-thu-pm', date: '2026-04-02', type: 'gym', label: 'Hyrox Gym (PM)', status: 'done' },
+  { id: 'w1-fri', date: '2026-04-03', type: 'longrun', label: 'Long Run', planned: { duration: 75, hrTarget: '130-140 bpm STRICT' }, isKey: true, status: 'upcoming' },
+  { id: 'w1-sat', date: '2026-04-04', type: 'rest', label: 'Rest', status: 'upcoming' },
+  { id: 'w1-sun2', date: '2026-04-05', type: 'run', label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm', notes: 'Treadmill' }, status: 'upcoming' },
+
+  // ===== WEEK 2 (Apr 6–12) — Aerobic Foundation =====
+  ...makeWeek(2, '2026-04-06', {
+    tuRun: { label: 'Z2 Run', planned: { duration: 50, hrTarget: 'Z2' } },
+    thuRun: { label: 'Z2 Push Run', planned: { duration: 50, hrTarget: 'Z2' } },
+    longRun: { planned: { duration: 75, hrTarget: '130-140 bpm' } },
+    sunRun: { label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm' } },
+  }),
+
+  // ===== WEEK 3 (Apr 13–19) — Volume +10% =====
+  ...makeWeek(3, '2026-04-13', {
+    tuRun: { label: 'Z2 Run', planned: { duration: 50, hrTarget: 'Z2' } },
+    thuRun: { label: 'Easy Run', planned: { duration: 40, hrTarget: 'Z1' } },
+    longRun: { planned: { duration: 80, hrTarget: '130-140 bpm' } },
+    sunRun: { label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm' } },
+  }),
+
+  // ===== WEEK 4 (Apr 20–26) — Consistency =====
+  ...makeWeek(4, '2026-04-20', {
+    tuRun: { label: 'Z3 Intervals', planned: { duration: 55, hrTarget: '5x4 min Z3 / 2 min Z1' } },
+    thuRun: { label: 'Easy Run', planned: { duration: 40, hrTarget: 'Z1' } },
+    longRun: { planned: { duration: 85, hrTarget: '130-142 bpm' } },
+    sunRun: { label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm' } },
+  }),
+
+  // ===== WEEK 5 (Apr 27 – May 3) — Hyrox Specificity =====
+  ...makeWeek(5, '2026-04-27', {
+    tuRun: { label: 'Hyrox Pace', planned: { duration: 55, hrTarget: '6x1km @ 4:45-4:50/km' } },
+    thuRun: { label: 'Easy Run', planned: { duration: 45, hrTarget: 'Z1' } },
+    longRun: { planned: { duration: 90, hrTarget: '130-140 bpm, last 10 min Z2 push' } },
+    sunRun: { label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm' } },
+  }),
+
+  // ===== WEEK 6 (May 4–10) — Peak Week =====
+  ...makeWeek(6, '2026-05-04', {
+    tuRun: { label: 'Tempo', planned: { duration: 55, hrTarget: '20 min Z3 tempo @ 4:45-4:50/km' } },
+    thuRun: { label: 'Easy Run', planned: { duration: 45, hrTarget: 'Z1' } },
+    longRun: { planned: { duration: 90, hrTarget: '130-142 bpm' } },
+    sunRun: { label: 'Recovery', planned: { duration: 40, hrTarget: '< 133 bpm' } },
+  }),
+
+  // ===== WEEK 7 (May 11–17) — Taper =====
+  ...makeWeek(7, '2026-05-11', {
+    tuRun: { label: 'Sharpener', planned: { duration: 40, hrTarget: '4x1km @ 4:40/km' } },
+    thuRun: { label: 'Easy Run', planned: { duration: 30, hrTarget: 'Z1' } },
+    longRun: { planned: { duration: 60, hrTarget: '130-140 bpm' } },
+    sunRun: { label: 'Recovery', planned: { duration: 30, hrTarget: '< 130 bpm' } },
+  }),
+
+  // ===== WEEK 8 (May 18–24) — Race Week =====
+  { id: 'w8-mon', date: '2026-05-18', type: 'rest', label: 'Rest', status: 'upcoming' },
+  { id: 'w8-tue', date: '2026-05-19', type: 'run', label: 'Opener', planned: { duration: 25, hrTarget: '15 min Z1 + 3x30s strides' }, status: 'upcoming' },
+  { id: 'w8-tue-pm', date: '2026-05-19', type: 'gym', label: 'Hyrox Gym (PM)', status: 'upcoming' },
+  { id: 'w8-wed', date: '2026-05-20', type: 'padel', label: 'Padel', status: 'upcoming' },
+  { id: 'w8-thu', date: '2026-05-21', type: 'run', label: 'Shakeout', planned: { duration: 20, hrTarget: 'Z1' }, status: 'upcoming' },
+  { id: 'w8-fri', date: '2026-05-22', type: 'run', label: 'HYROX DUO', planned: { notes: 'RACE DAY — Lyon' }, isKey: true, status: 'upcoming' },
+  { id: 'w8-sat', date: '2026-05-23', type: 'rest', label: 'Rest', status: 'upcoming' },
+  { id: 'w8-sun', date: '2026-05-24', type: 'rest', label: 'Rest', status: 'upcoming' },
 ];

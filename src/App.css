@@ -108,6 +108,42 @@ body {
   font-size: 0.85rem;
 }
 
+/* ========== WEEK OBJECTIVE ========== */
+.week-objective {
+  padding: 12px 14px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  margin-bottom: 12px;
+}
+
+.week-objective-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.week-objective-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+}
+
+.week-objective-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.week-objective-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
 /* ========== KPIs ========== */
 .kpi-row {
   display: grid;

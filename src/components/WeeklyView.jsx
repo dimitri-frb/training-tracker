@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, parseISO, startOfWeek, addWeeks, subWeeks, isSameWeek } from 'date-fns';
-import { paceToSeconds, secondsToPace } from '../data/trainingPlan';
+import { paceToSeconds, secondsToPace, WEEK_OBJECTIVES } from '../data/trainingPlan';
 import SessionCard from './SessionCard';
 import SessionLogger from './SessionLogger';
 
@@ -41,6 +41,8 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
 
   const weekEnd = addWeeks(currentWeekStart, 1);
   const kpis = useMemo(() => computeKPIs(weekSessions), [weekSessions]);
+  const weekKey = format(currentWeekStart, 'yyyy-MM-dd');
+  const objective = WEEK_OBJECTIVES[weekKey];
 
   return (
     <div className="weekly-view">
@@ -55,6 +57,16 @@ export default function WeeklyView({ sessions, onLog, onUpdate }) {
           Next &rarr;
         </button>
       </div>
+
+      {objective && (
+        <div className="week-objective">
+          <div className="week-objective-header">
+            <span className="week-objective-num">W{objective.week}</span>
+            <span className="week-objective-title">{objective.title}</span>
+          </div>
+          <p className="week-objective-desc">{objective.desc}</p>
+        </div>
+      )}
 
       <div className="kpi-row">
         <div className="kpi-card">
