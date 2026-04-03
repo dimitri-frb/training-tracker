@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import MacrocycleView from './components/MacrocycleView';
 import WeeklyView from './components/WeeklyView';
-import LongRunChart from './components/LongRunChart';
 import ProgressionChart from './components/ProgressionChart';
 import { useTrainingData } from './hooks/useTrainingData';
 import { ATHLETE } from './data/trainingPlan';
@@ -11,7 +10,6 @@ const TABS = [
   { id: 'week', label: 'Week' },
   { id: 'progression', label: 'Progression' },
   { id: 'macro', label: 'Macrocycle' },
-  { id: 'chart', label: 'Long Runs' },
 ];
 
 export default function App() {
@@ -48,7 +46,6 @@ export default function App() {
         )}
         {activeTab === 'progression' && <ProgressionChart sessions={sessions} />}
         {activeTab === 'macro' && <MacrocycleView />}
-        {activeTab === 'chart' && <LongRunChart sessions={sessions} />}
       </main>
     </div>
   );

@@ -153,6 +153,40 @@ export default function ProgressionChart({ sessions }) {
           </tbody>
         </table>
       </div>
+      <p className="chart-subtitle" style={{ marginTop: '24px' }}>HR Zones</p>
+      <div className="zones-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Zone</th>
+              <th>HR Range</th>
+              <th>Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(ATHLETE.hrZones).map(([key, z]) => (
+              <tr key={key}>
+                <td>
+                  <span className="zone-dot" style={{ backgroundColor: z.color }} />
+                  {key.toUpperCase()}
+                </td>
+                <td>{z.min === 0 ? `< ${z.max}` : `${z.min}–${z.max}`} bpm</td>
+                <td className="zone-use">{
+                  key === 'z1' ? 'Recovery, warm-up' :
+                  key === 'z2' ? 'Aerobic base, long runs' :
+                  key === 'z3' ? 'Tempo, marathon pace' :
+                  key === 'z4' ? 'Threshold, race efforts' :
+                  'VO2max intervals'
+                }</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="zones-meta">
+          <span>HR Max: {ATHLETE.hrMax} bpm</span>
+          <span>LT: ~{ATHLETE.lactateThreshold} bpm</span>
+        </div>
+      </div>
     </div>
   );
 }
