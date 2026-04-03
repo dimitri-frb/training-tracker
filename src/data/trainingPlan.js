@@ -126,7 +126,7 @@ export const INITIAL_SESSIONS = [
   { id: 'w1-tue-pm', date: '2026-03-31', type: 'gym', label: 'Hyrox Gym (PM)', status: 'upcoming' },
   { id: 'w1-wed', date: '2026-04-01', type: 'padel', label: 'Padel', status: 'upcoming' },
   { id: 'w1-thu-pm', date: '2026-04-02', type: 'gym', label: 'Hyrox Gym (PM)', status: 'done' },
-  { id: 'w1-fri', date: '2026-04-03', type: 'run', label: 'Easy Run', planned: { duration: 30, hrTarget: 'Z1', notes: 'Pre-long run opener' }, status: 'upcoming' },
+  { id: 'w1-fri', date: '2026-04-03', type: 'run', label: 'Easy Run', planned: { duration: 30, hrTarget: 'Z1', notes: 'Treadmill — pre-long run opener' }, status: 'upcoming' },
   { id: 'w1-sat', date: '2026-04-04', type: 'longrun', label: 'Long Run', planned: { duration: 75, hrTarget: '130-140 bpm STRICT' }, isKey: true, status: 'upcoming' },
   { id: 'w1-sun2', date: '2026-04-05', type: 'run', label: 'Recovery', planned: { duration: 35, hrTarget: '< 133 bpm', notes: 'Treadmill' }, status: 'upcoming' },
 
