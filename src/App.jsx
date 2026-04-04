@@ -19,8 +19,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Training Tracker</h1>
-        <span className="athlete-name">{ATHLETE.name}</span>
+        <h1>Dimitri's Road to Hyrox</h1>
       </header>
 
       <nav className="tab-nav">
